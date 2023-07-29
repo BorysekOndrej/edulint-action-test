@@ -18,13 +18,14 @@ ImmutableT = Union[bool, Tuple[str, ...], Optional[str], Optional[int]]
 
 class Option(NumberFromZero):
 
+    CONFIG = ()
     PYLINT = ()
     FLAKE8 = ()
-    ENHANCEMENT = ()
-    PYTHON_SPECIFIC = ()
-    COMPLEXITY = ()
+    # ENHANCEMENT = ()
+    # PYTHON_SPECIFIC = ()
+    # COMPLEXITY = ()
     ALLOWED_ONECHAR_NAMES = ()
-    IB111_WEEK = ()
+    # IB111_WEEK = ()
     NO_FLAKE8 = ()
 
     def to_name(self) -> str:
@@ -120,6 +121,14 @@ class OptionParse:
 
 OPTIONS: List[OptionParse] = [
     OptionParse(
+        Option.CONFIG,
+        "config file to use for the linting",
+        TakesVal.YES,
+        None,
+        Type.STR,
+        Combine.REPLACE
+    ),
+    OptionParse(
         Option.PYLINT,
         "arguments to be passed to pylint",
         TakesVal.YES,
@@ -135,30 +144,30 @@ OPTIONS: List[OptionParse] = [
         Type.LIST,
         Combine.EXTEND
     ),
-    OptionParse(
-        Option.ENHANCEMENT,
-        "enable checking for ways to improve the code further",
-        TakesVal.NO,
-        False,
-        Type.BOOL,
-        Combine.REPLACE
-    ),
-    OptionParse(
-        Option.PYTHON_SPECIFIC,
-        "enable checking for ways to improve the code with Python-specific constructions",
-        TakesVal.NO,
-        False,
-        Type.BOOL,
-        Combine.REPLACE
-    ),
-    OptionParse(
-        Option.COMPLEXITY,
-        "enable checking for overly complicated pieces of code",
-        TakesVal.NO,
-        False,
-        Type.BOOL,
-        Combine.REPLACE
-    ),
+    # OptionParse(
+    #     Option.ENHANCEMENT,
+    #     "enable checking for ways to improve the code further",
+    #     TakesVal.NO,
+    #     False,
+    #     Type.BOOL,
+    #     Combine.REPLACE
+    # ),
+    # OptionParse(
+    #     Option.PYTHON_SPECIFIC,
+    #     "enable checking for ways to improve the code with Python-specific constructions",
+    #     TakesVal.NO,
+    #     False,
+    #     Type.BOOL,
+    #     Combine.REPLACE
+    # ),
+    # OptionParse(
+    #     Option.COMPLEXITY,
+    #     "enable checking for overly complicated pieces of code",
+    #     TakesVal.NO,
+    #     False,
+    #     Type.BOOL,
+    #     Combine.REPLACE
+    # ),
     OptionParse(
         Option.ALLOWED_ONECHAR_NAMES,
         "only listed characters are allowed to be variable names of length one",
@@ -167,14 +176,14 @@ OPTIONS: List[OptionParse] = [
         Type.STR,
         Combine.REPLACE
     ),
-    OptionParse(
-        Option.IB111_WEEK,
-        "set which week's limitation should be applied",
-        TakesVal.YES,
-        None,
-        Type.INT,
-        Combine.REPLACE
-    ),
+    # OptionParse(
+    #     Option.IB111_WEEK,
+    #     "set which week's limitation should be applied",
+    #     TakesVal.YES,
+    #     None,
+    #     Type.INT,
+    #     Combine.REPLACE
+    # ),
     OptionParse(
         Option.NO_FLAKE8,
         "turn off flake8",
@@ -185,7 +194,7 @@ OPTIONS: List[OptionParse] = [
     )
 ]
 
-OLD_NAMES = {"python-spec": Option.PYTHON_SPECIFIC}
+# OLD_NAMES = {"python-spec": Option.PYTHON_SPECIFIC}
 
 
 def get_option_parses() -> Dict[Option, OptionParse]:
@@ -194,5 +203,5 @@ def get_option_parses() -> Dict[Option, OptionParse]:
 
 def get_name_to_option(option_parses: Dict[Option, OptionParse]) -> Dict[str, Option]:
     from_options = {parse.option.to_name(): opt for opt, parse in option_parses.items()}
-    from_options.update(OLD_NAMES)
+    # from_options.update(OLD_NAMES)
     return from_options

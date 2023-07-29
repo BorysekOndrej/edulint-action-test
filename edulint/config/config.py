@@ -45,7 +45,7 @@ class Config:
 
 def extract_args(filename: str) -> List[str]:
     edulint_re = re.compile(r"\s*#[\s#]*edulint:\s*", re.IGNORECASE)
-    ib111_re = re.compile(r"\s*from\s+ib111\s+import\s+week_(\d+)", re.IGNORECASE)
+    # ib111_re = re.compile(r"\s*from\s+ib111\s+import\s+week_(\d+)", re.IGNORECASE)
 
     result: List[str] = []
     with open(filename, encoding="utf-8") as f:
@@ -57,9 +57,9 @@ def extract_args(filename: str) -> List[str]:
                 raw_args = line[edmatch.end():]
                 result.extend(shlex.split(raw_args))
 
-            ibmatch = ib111_re.match(line)
-            if ibmatch:
-                result.append(f"{Option.IB111_WEEK.to_name()}={ibmatch.group(1)}")
+            # ibmatch = ib111_re.match(line)
+            # if ibmatch:
+            #     result.append(f"{Option.IB111_WEEK.to_name()}={ibmatch.group(1)}")
 
     return result
 
@@ -128,14 +128,14 @@ def combine_and_translate(
         if translated is not None and option_vals[int(arg.option)] not in (False, None):
             apply_translation(option_vals, translated)
 
-    ib111_week = option_vals[int(Option.IB111_WEEK)]
-    if ib111_week is not None:
-        assert isinstance(ib111_week, int)
-        if 0 <= ib111_week < len(ib111_translations):
-            apply_translation(option_vals, ib111_translations[ib111_week])
-        else:
-            print(f"edulint: option {Option.IB111_WEEK.to_name()} has value {ib111_week} which is invalid;"
-                  f"allowed values are 0 to {len(ib111_translations)}", file=sys.stderr)
+    # ib111_week = option_vals[int(Option.IB111_WEEK)]
+    # if ib111_week is not None:
+    #     assert isinstance(ib111_week, int)
+    #     if 0 <= ib111_week < len(ib111_translations):
+    #         apply_translation(option_vals, ib111_translations[ib111_week])
+    #     else:
+    #         print(f"edulint: option {Option.IB111_WEEK.to_name()} has value {ib111_week} which is invalid;"
+    #               f"allowed values are 0 to {len(ib111_translations)}", file=sys.stderr)
 
     return Config([ProcessedArg(o, v) for o, v in zip(Option, option_vals) if v is not None])
 
@@ -144,7 +144,8 @@ def get_config(
         filename: str, cmd_args: List[str],
         option_parses: Dict[Option, OptionParse] = get_option_parses(),
         config_translations: Dict[Option, Translation] = get_config_translations(),
-        ib111_translation: List[Translation] = get_ib111_translations()) -> Config:
+        # ib111_translation: List[Translation] = get_ib111_translations()
+    ) -> Config:
     extracted = extract_args(filename) + cmd_args
     parsed = parse_args(extracted, option_parses)
     return combine_and_translate(parsed, option_parses, config_translations, ib111_translation)
