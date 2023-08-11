@@ -1,5 +1,8 @@
 name: Tests compatibility for several versions
 
+# The current limitations of matrix testing:
+# - testing across multiple pylint and/or flake8 versions is only supported on Linux.
+# 
 
 on:
   workflow_call:
@@ -72,8 +75,8 @@ jobs:
       - name: Install Edulint
         run: pip install .
 
-      # - name: Test with pytest
-      #   run: pytest --junit-xml pytest.xml tests/
+      - name: Test with pytest
+        run: pytest --junit-xml pytest.xml tests/
 
       - name: Upload Unit Test Results
         if: always()
