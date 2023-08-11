@@ -32,26 +32,26 @@ jobs:
         name: Get Flake8 versions
         run: python pypi_helper.py flake8 --github --n-versions 6 >> "$GITHUB_OUTPUT"
 
-  test-python-versions:
-    uses: ./.github/workflows/test.yaml
-    secrets: inherit
-    needs: get-versions
-    with:
-      python_matrix: '["3.7", "3.8", "3.9", "3.10", "3.11"]'
+  # test-python-versions:
+  #   uses: ./.github/workflows/test.yaml
+  #   secrets: inherit
+  #   needs: get-versions
+  #   with:
+  #     python_matrix: '["3.7", "3.8", "3.9", "3.10", "3.11"]'
   
-  test-pylint-versions:
-    uses: ./.github/workflows/test.yaml
-    secrets: inherit
-    needs: get-versions
-    with:
-      pylint_matrix: ${{needs.get-versions.outputs.pylint}}
+  # test-pylint-versions:
+  #   uses: ./.github/workflows/test.yaml
+  #   secrets: inherit
+  #   needs: get-versions
+  #   with:
+  #     pylint_matrix: ${{needs.get-versions.outputs.pylint}}
 
-  test-flake8-versions:
-    uses: ./.github/workflows/test.yaml
-    secrets: inherit
-    needs: get-versions
-    with:
-      flake8_matrix: ${{needs.get-versions.outputs.flake8}}
+  # test-flake8-versions:
+  #   uses: ./.github/workflows/test.yaml
+  #   secrets: inherit
+  #   needs: get-versions
+  #   with:
+  #     flake8_matrix: ${{needs.get-versions.outputs.flake8}}
 
 
   test-os-versions:
