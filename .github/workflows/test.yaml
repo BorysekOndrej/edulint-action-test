@@ -56,7 +56,7 @@ jobs:
         run: |
           sed -i "s/pylint *[~<>=][^\"]*/pylint==${{ matrix.pylint }}/" requirements.txt
           sed -i "s/pylint *[~<>=][^\"]*/pylint ==${{ matrix.pylint }}/" setup.cfg
-        if: ${{ matrix.pylint != "default" }}
+        if: ${{ matrix.pylint != 'default' }}
 
       # - name: Mock flake8 version in requirements.txt and setup.cfg
       #   run: |
