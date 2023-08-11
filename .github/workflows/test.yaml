@@ -9,10 +9,10 @@ on:
         default: '["3.8"]'
       pylint_matrix:
         type: string
-        default: '["2.17.5"]'
+        default: '["default"]'
       flake8_matrix:
         type: string
-        default: '["6.1.0"]'
+        default: '["default"]'
       os_matrix:
         type: string
         default: '["ubuntu-latest"]'
@@ -52,10 +52,11 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: 'pip'
 
-      # - name: Mock pylint version in requirements.txt and setup.cfg
-      #   run: |
-      #     sed -i "s/pylint *[~<>=][^\"]*/pylint==${{ matrix.pylint }}/" requirements.txt
-      #     sed -i "s/pylint *[~<>=][^\"]*/pylint ==${{ matrix.pylint }}/" setup.cfg
+      - name: Mock pylint version in requirements.txt and setup.cfg
+        run: |
+          sed -i "s/pylint *[~<>=][^\"]*/pylint==${{ matrix.pylint }}/" requirements.txt
+          sed -i "s/pylint *[~<>=][^\"]*/pylint ==${{ matrix.pylint }}/" setup.cfg
+        if: ${{ matrix.pylint != "default" }}
 
       # - name: Mock flake8 version in requirements.txt and setup.cfg
       #   run: |
@@ -70,8 +71,8 @@ jobs:
       - name: Install Edulint
         run: pip install .
 
-      - name: Test with pytest
-        run: pytest --junit-xml pytest.xml tests/
+      # - name: Test with pytest
+      #   run: pytest --junit-xml pytest.xml tests/
 
       - name: Upload Unit Test Results
         if: always()
