@@ -62,7 +62,7 @@ jobs:
         run: |
           sed -i "s/flake8 *[~<>=][^\"]*/flake8==${{ matrix.flake8 }}/" requirements.txt
           sed -i "s/flake8 *[~<>=][^\"]*/flake8 ==${{ matrix.flake8 }}/" setup.cfg
-          if: ${{ matrix.flake8 != 'default' }}
+        if: ${{ matrix.flake8 != 'default' }}
 
       - name: Install dependencies
         run: |
