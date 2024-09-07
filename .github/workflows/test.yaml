@@ -1,15 +1,13 @@
 name: Tests compatibility for several versions
 
-# The current limitations of matrix testing:
-# - testing across multiple pylint and/or flake8 versions is only supported on Linux.
-# 
+# Note that testing non-default pylint or flake8 version is only supported on Linux.
 
 on:
   workflow_call:
     inputs:
       python_matrix:
         type: string
-        default: '["3.8"]'
+        default: '["3.11"]'
       pylint_matrix:
         type: string
         default: '["default"]'
@@ -40,27 +38,25 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: 'true'
           token: '${{ secrets.PAT_PRIVATE_TESTS }}'
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
           cache: 'pip'
 
-      - name: Mock pylint version in requirements.txt and setup.cfg
+      - name: Mock pylint version in requirements.txt (which is sourced for setup.cfg)
         run: |
           sed -i "s/pylint *[~<>=][^\"]*/pylint==${{ matrix.pylint }}/" requirements.txt
-          sed -i "s/pylint *[~<>=][^\"]*/pylint ==${{ matrix.pylint }}/" setup.cfg
         if: ${{ matrix.pylint != 'default' }}
 
-      - name: Mock flake8 version in requirements.txt and setup.cfg
+      - name: Mock flake8 version in requirements.txt (which is sourced for setup.cfg)
         run: |
           sed -i "s/flake8 *[~<>=][^\"]*/flake8==${{ matrix.flake8 }}/" requirements.txt
-          sed -i "s/flake8 *[~<>=][^\"]*/flake8 ==${{ matrix.flake8 }}/" setup.cfg
         if: ${{ matrix.flake8 != 'default' }}
 
       - name: Install dependencies
@@ -77,11 +73,15 @@ jobs:
       - name: Test with pytest
         run: pytest --junit-xml pytest.xml tests/
 
+      - name: Timestamp to have unique part of artefact ID
+        id: timestamp_id
+        run: echo "timestamp_id=$(date +%s.%N)" >> $GITHUB_OUTPUT
+
       - name: Upload Unit Test Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: Unit Test Results (Python ${{ matrix.python }})
+          name: pytest-${{ matrix.python }}-${{ matrix.pylint }}-${{ matrix.flake8 }}-${{ matrix.os }}-${{steps.timestamp_id.outputs.timestamp_id}}.xml
           path: pytest.xml
 
   publish-test-results:
@@ -97,11 +97,11 @@ jobs:
 
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2.4.2
+        uses: EnricoMi/publish-unit-test-result-action@v2.16.1
         with:
           files: "artifacts/**/pytest.xml"

@@ -11,10 +11,11 @@ jobs:
   publish-package:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Github Release
       uses: softprops/action-gh-release@v1
-      # with:
+      with:
+        generate_release_notes: true
         # body: ""
         # body_path: CHANGELOG.txt
