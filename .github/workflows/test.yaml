@@ -2,6 +2,7 @@ name: Tests compatibility for several versions
 
 # Note that testing non-default pylint or flake8 version is only supported on Linux.
 
+
 on:
   workflow_call:
     inputs:
@@ -52,7 +53,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           submodules: 'true'
           token: '${{ secrets.PAT_PRIVATE_TESTS }}'
